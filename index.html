@@ -596,11 +596,11 @@ input[type="search"] {
 </head>
 <body>
 <div id="unusedElements" class="unused-elements-storage">
-    <button class="searchbar-button" id="showSearchResultsButton" onclick="window.explorer.toggleSidebar()"><img src="hamburger.svg" class="button-icon"></img></button>
+    <button class="searchbar-button" id="showSearchResultsButton" onclick="window.explorer.toggleSidebar()"><img src="mapsplode/hamburger.svg" class="button-icon"></img></button>
   <!-- <div class="searchbar-divider"></div> -->
-  <button class="searchbar-button" id="showDataFiltersButton" onclick="window.explorer.toggleFilters()"><img src="filter.svg" class="button-icon"></img></button>
+  <button class="searchbar-button" id="showDataFiltersButton" onclick="window.explorer.toggleFilters()"><img src="mapsplode/filter.svg" class="button-icon"></img></button>
   <!-- <div class="searchbar-divider"></div> -->
-  <button class="searchbar-button" id="showSettingsButton" onclick="window.explorer.toggleSettings()"><img src="settings.svg" class="button-icon"></img></button>
+  <button class="searchbar-button" id="showSettingsButton" onclick="window.explorer.toggleSettings()"><img src="mapsplode/settings.svg" class="button-icon"></img></button>
     <div class="search-input-row advanced-setting"><input type="checkbox" id="colorMapDotsCheckbox" name="checkbox-colorMapDots" title="Color Map Dots" onclick="window.explorer.toggleColorMapDots(event)" /><label for="colorMapDotsCheckbox">Color Map Dots</label></div>
     <div class="search-input-row advanced-setting"><input type="checkbox" id="colorGraphsCheckbox" name="checkbox-colorGraphs" title="Color Graphs" onclick="window.explorer.toggleColorGraphs(event)" /><label for="colorGraphsCheckbox">Color Graphs</label></div>
     <div class="search-input-row advanced-setting"><input type="checkbox" id="lineGraphsCheckbox" name="checkbox-lineGraphs" title="Line Graphs" onclick="window.explorer.toggleLineGraphs(event)" /><label for="lineGraphsCheckbox">Line Graphs</label></div>
@@ -614,7 +614,7 @@ input[type="search"] {
     <!-- <button class="searchbar-button" onclick="toggleSidebar()">☰</button> -->
     <!-- <div class="searchbar-divider"></div> -->
     <input type="search" id="sensorSearchField" class="search-text" placeholder="search sensor feeds">
-    <button class="searchbar-button" onclick="window.explorer.doSensorSearch()"><img src="loupe.svg" class="button-icon"></img></button>
+    <button class="searchbar-button" onclick="window.explorer.doSensorSearch()"><img src="mapsplode/loupe.svg" class="button-icon"></img></button>
     <!-- <div class="searchbar-divider"></div> -->
     <a class="searchbar-button" href='https://docs.google.com/document/d/18IFx6Tyv0EGenEpOrexnB1ajQEBYHsWWpN5wi7PPXC0/pub' target="_blank" style="display: block; vertical-align: middle; margin: 0px; padding: 0px; text-decoration: none; cursor: pointer;"><button class="searchbar-linked-button">?</button></a>
     </div>
@@ -650,27 +650,27 @@ input[type="search"] {
       <div class="toolbar-spacer" style="flex-grow: 1;"></div>
       <div class="plots-shadow-group">
         <button class="plots-toolbar-button plots-toolbar-group-left" onclick="window.explorer.moveTimelineByFactorAnimated(-0.25)" style="padding-right: 0.25em;">
-          <img src="goleft.svg" class="button-icon"></img>
+          <img src="mapsplode/goleft.svg" class="button-icon"></img>
         </button>
         <div class="plots-toolbar-button plots-toolbar-group-center hide-when-narrow2" style="padding-left: 0;padding-right: 0; flex-shrink: 1; flex-basis: 10em;">
           <input type="range" min="-100" max="100" value="0" class="plots-date-scrubber" id="plotsDateScrubber" />
         </div>
         <button class="plots-toolbar-button plots-toolbar-group-right" onclick="window.explorer.moveTimelineByFactorAnimated(0.25)" style="padding-left: 0.25em;">
-          <img src="goright.svg" class="button-icon"></img>
+          <img src="mapsplode/goright.svg" class="button-icon"></img>
         </button>
         <button class="plots-toolbar-button plots-toolbar-group-divider"><div class="plots-toolbar-group-divider-content"></div></button>
-        <button class="plots-toolbar-button" onclick="window.explorer.moveTimelineTo(Date.now() * 0.001, 0.9)"><img src="gonow.svg" class="button-icon"></img></button>
+        <button class="plots-toolbar-button" onclick="window.explorer.moveTimelineTo(Date.now() * 0.001, 0.9)"><img src="mapsplode/gonow.svg" class="button-icon"></img></button>
       </div>
       <div class="toolbar-group-spacer"></div>
       <div class="plots-shadow-group">
         <button class="plots-toolbar-button plots-toolbar-group-left" onclick="window.explorer.zoomTimelineByFactorAnimated(1.4142135624)" style="padding-right: 0.25em;">
-          <img src="minus.svg" class="button-icon"></img>
+          <img src="mapsplode/minus.svg" class="button-icon"></img>
         </button>
         <div class="plots-toolbar-button plots-toolbar-group-center hide-when-narrow2" style="padding-left: 0;padding-right: 0;  flex-shrink: 1; flex-basis: 10em;">
           <input type="range" min="-100" max="100" value="0" class="plots-zoom-scrubber" id="plotsZoomScrubber" />
         </div>
         <button class="plots-toolbar-button plots-toolbar-group-right" onclick="window.explorer.zoomTimelineByFactorAnimated(0.7071067812)" style="padding-left: 0.25em;">
-          <img src="plus.svg" class="button-icon"></img>
+          <img src="mapsplode/plus.svg" class="button-icon"></img>
         </button>
         <button class="plots-toolbar-button plots-toolbar-group-divider hide-when-narrow"><div class="plots-toolbar-group-divider-content"></div></button>
         <button class="plots-toolbar-button plots-toolbar-group-left hide-when-narrow" onclick="window.explorer.zoomTimelineToSize(24*60*60)">day</button>
@@ -681,19 +681,19 @@ input[type="search"] {
       </div>
       <div class="toolbar-group-spacer"></div>
       <div class="plots-shadow-group">
-        <button id="decreasePlotAreaHeightButton" class="plots-toolbar-button plots-toolbar-group-left" onclick="window.explorer.decreasePlotAreaHeight()"><img src="ylower.svg" class="button-icon"></img></button>
+        <button id="decreasePlotAreaHeightButton" class="plots-toolbar-button plots-toolbar-group-left" onclick="window.explorer.decreasePlotAreaHeight()"><img src="mapsplode/ylower.svg" class="button-icon"></img></button>
         <button class="plots-toolbar-button plots-toolbar-group-divider"><div class="plots-toolbar-group-divider-content"></div></button>
-        <button id="increasePlotAreaHeightButton" class="plots-toolbar-button plots-toolbar-group-right" onclick="window.explorer.increasePlotAreaHeight()"><img src="yraise.svg" class="button-icon"></img></button>
+        <button id="increasePlotAreaHeightButton" class="plots-toolbar-button plots-toolbar-group-right" onclick="window.explorer.increasePlotAreaHeight()"><img src="mapsplode/yraise.svg" class="button-icon"></img></button>
       </div>
         <!-- <div class="toolbar-spacer"></div> -->
       <div class="plots-shadow-group">
-        <button id="decreasePlotHeightButton" class="plots-toolbar-button plots-toolbar-group-left" onclick="window.explorer.decreasePlotHeight()"><img src="yshrink.svg" class="button-icon"></img></button>
+        <button id="decreasePlotHeightButton" class="plots-toolbar-button plots-toolbar-group-left" onclick="window.explorer.decreasePlotHeight()"><img src="mapsplode/yshrink.svg" class="button-icon"></img></button>
         <button class="plots-toolbar-button plots-toolbar-group-divider"><div class="plots-toolbar-group-divider-content"></div></button>
-        <button id="increasePlotHeightButton" class="plots-toolbar-button plots-toolbar-group-right" onclick="window.explorer.increasePlotHeight()"><img src="ygrow.svg" class="button-icon"></img></button>
+        <button id="increasePlotHeightButton" class="plots-toolbar-button plots-toolbar-group-right" onclick="window.explorer.increasePlotHeight()"><img src="mapsplode/ygrow.svg" class="button-icon"></img></button>
       </div>
       <div class="toolbar-group-spacer"></div>
       <div class="plots-shadow-group">
-        <button id="showDataDownloadsButton" class="plots-toolbar-button" onclick="window.explorer.toggleDataDownloads()"><img src="download.svg" class="button-icon"></img></button>
+        <button id="showDataDownloadsButton" class="plots-toolbar-button" onclick="window.explorer.toggleDataDownloads()"><img src="mapsplode/download.svg" class="button-icon"></img></button>
       </div>
     </div>
 <!--     <div id="plotOptions" class="plot-options-row">
@@ -2542,7 +2542,7 @@ explorer.addPlot = function(feedId, channelName) {
 
   let labelClose = document.createElement("img")
   labelClose.setAttribute("class", "button-icon")
-  labelClose.setAttribute("src", "cross.svg")
+  labelClose.setAttribute("src", "mapsplode/cross.svg")
   labelClose.style.marginLeft = "0.25em"
   labelClose.style.marginRight = "0.25em"
   labelClose.addEventListener("click", () => explorer.interactiveSelectChannelWithId(channelId, false))
@@ -2590,7 +2590,7 @@ explorer.addPlot = function(feedId, channelName) {
 
     let csvDownloadIcon = document.createElement("img")
     csvDownloadIcon.setAttribute("class", "button-icon")
-    csvDownloadIcon.src = "download.svg"
+    csvDownloadIcon.src = "mapsplode/download.svg"
 
     let csvDownloadButton1 = document.createElement("div")
     csvDownloadButton1.setAttribute("class", "plots-toolbar-button plots-toolbar-group-right")
@@ -2623,7 +2623,7 @@ explorer.addPlot = function(feedId, channelName) {
 
     let jsonDownloadIcon = document.createElement("img")
     jsonDownloadIcon.setAttribute("class", "button-icon")
-    jsonDownloadIcon.src = "download.svg"
+    jsonDownloadIcon.src = "mapsplode/download.svg"
 
     let jsonDownloadButton1 = document.createElement("div")
     jsonDownloadButton1.setAttribute("class", "plots-toolbar-button plots-toolbar-group-right")
