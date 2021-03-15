@@ -335,7 +335,7 @@ input[type="search"] {
   font-size: large;
   background-color: var(--plot-toolbar-color);
   padding-left: 0.25em;
-  padding-right: 0.52em;
+  padding-right: 0.25em;
   padding-bottom: 0.25em;
   padding-top: 0.25em;
 }
@@ -695,6 +695,19 @@ input[type="search"] {
       <div class="plots-shadow-group">
         <button id="showDataDownloadsButton" class="plots-toolbar-button" onclick="window.explorer.toggleDataDownloads()"><img src="mapsplode/download.svg" class="button-icon"></img></button>
       </div>
+    </div>
+    <div id="plotsDownloadToolbar" class="plots-toolbar" style="height: 0px; padding: 0px; overflow-y: hidden;">
+      <div class="toolbar-group-spacer"></div>
+      <div class="plots-shadow-group">
+        <div id="timezoneButton" class="plots-toolbar-button"></div>
+      </div>
+      <div class="toolbar-group-spacer"></div>
+      <div class="plots-shadow-group">
+        <div class="plots-toolbar-button"><img src="mapsplode/download.svg" class="button-icon"></img>&nbsp;<a id="downloadAllJsonButton" style="font-size: small;">Download JSON</a></div>
+        <button class="plots-toolbar-button plots-toolbar-group-divider hide-when-narrow"><div class="plots-toolbar-group-divider-content"></div></button>
+        <button class="plots-toolbar-button plots-toolbar-group-right"><a id="downloadAllCsvButton" style="font-size: small;">Download CSV</a></button>
+      </div>
+      <div class="toolbar-group-spacer"></div>
     </div>
 <!--     <div id="plotOptions" class="plot-options-row">
       here be options
@@ -1464,8 +1477,6 @@ explorer.sizeVisibleDownloadButtonDivs = function() {
   let groupBlock = document.getElementById("plotCornerExtension")
   let widthIFrame = document.getElementById("plotWidthIframe")
 
-
-
   if (groupBlock.style.width && groupBlock.style.width !== "0px") {
 
    let maxWidth = Array.from(document.querySelectorAll(".plot-extension")).reduce((acc, element) => Math.max(acc, element.scrollWidth || 1.0), 0.0)
@@ -1494,12 +1505,19 @@ explorer.toggleDataDownloads = function() {
   let transitionTargetWidth = 0
   let transitionStartWidth = 0
 
+  let transitionTargetHeight = 0
+  let transitionStartHeight = 0
+
+  let maxHeight = 2
+
   let maxWidth = Array.from(document.querySelectorAll(".plot-extension")).reduce((acc, element) => Math.max(acc, element.scrollWidth || 1.0), 0.0)
 
   if (!groupBlock.style.width || groupBlock.style.width === "0px") {
     transitionTargetWidth = maxWidth
+    transitionTargetHeight = maxHeight
     // transitionTargetWidth = 0.5*widthIFrame.clientWidth
     transitionStartWidth = 0
+    transitionStartHeight = 0
     explorer.showDataDownloads = true
     document.getElementById("showDataDownloadsButton").classList.add("active-toolbar-button")
 
@@ -1507,7 +1525,9 @@ explorer.toggleDataDownloads = function() {
   }
   else {
     transitionTargetWidth = 0
+    transitionTargetHeight = 0
     transitionStartWidth = maxWidth
+    transitionStartHeight = maxHeight
     explorer.showDataDownloads = false
     document.getElementById("showDataDownloadsButton").classList.remove("active-toolbar-button")
   }
@@ -1518,10 +1538,14 @@ explorer.toggleDataDownloads = function() {
     let timeRange = explorer.grapher.getTimeRange()
     let u = Math.min((time - startTime)/transitionTime, 1.0)
     let width = transitionStartWidth*(1.0-u) + transitionTargetWidth*(u)
+    let height = transitionStartHeight*(1.0-u) + transitionTargetHeight*(u)
     let widthString = width + 'px'
     groupBlock.style.width = widthString
 
     document.querySelectorAll(".plot-extension").forEach((element) => element.style.width = widthString)
+
+    let downloadToolbarBlock = document.getElementById("plotsDownloadToolbar")
+    downloadToolbarBlock.style.height = height + "em"
 
     explorer.updateDataDownloadLinks()
     // set time range as we're changing size, which would normally keep magnification constant
@@ -1952,7 +1976,8 @@ function initPlots() {
   plotExtensionDiv.style.alignItems = "center"
 
 
-  let timezoneDatalist = explorer.addTimezoneSelectorTo(plotExtPaddingDiv)
+  let timezoneDatalist = explorer.addTimezoneSelectorTo(document.getElementById("timezoneButton"))
+  // let timezoneDatalist = explorer.addTimezoneSelectorTo(plotExtPaddingDiv)
 
   plotExtensionDiv.appendChild(plotExtPaddingDiv)
 
@@ -2297,7 +2322,8 @@ explorer.stopScrubbing = function() {
   explorer.scrubSpeed = 0
 }
 
-explorer.updateDataDownloadLinks = function() {
+
+explorer.getTimeZone = function() {
   let tzElement = document.getElementById("timezoneSelectorInput")
   if (!tzElement) {
     console.warn("timezoneSelectorInput element not found for updating download links")
@@ -2318,12 +2344,22 @@ explorer.updateDataDownloadLinks = function() {
     tz = ""
   }
 
+  return tz
+}
+
+explorer.updateDataDownloadLinks = function() {
+
+  let tz = explorer.getTimeZone()
+
   // if we don't have a timerange to work with, don't even bother
   if (!explorer.startTime || !explorer.endTime) {
     return
   }
 
+  // individual download buttons are set, as well as download all
+  let channelIds = []
   for (let [channelId, {plotId: plotId}] of explorer.plots) {
+    channelIds.push(channelId)
     let feedId = parseInt(channelId.slice(0, channelId.indexOf(".")))
     let channelName = channelId.slice(channelId.indexOf(".")+1)
     let csvLink = esdr.getExportLink(feedId, channelName, explorer.startTime, explorer.endTime, "csv", tz.length > 0 ? tz : undefined)
@@ -2331,6 +2367,12 @@ explorer.updateDataDownloadLinks = function() {
     let jsonLink = esdr.getExportLink(feedId, channelName, explorer.startTime, explorer.endTime, "json", tz.length > 0 ? tz : undefined)
     document.getElementById(`plotlink_json-${plotId}`).setAttribute("href", jsonLink)
   }
+
+  let allJsonLink = esdr.getMultiExportLink(channelIds, explorer.startTime, explorer.endTime, "json", tz.length > 0 ? tz : undefined)
+  document.getElementById("downloadAllJsonButton").setAttribute("href", allJsonLink)
+  let allCsvLink = esdr.getMultiExportLink(channelIds, explorer.startTime, explorer.endTime, "csv", tz.length > 0 ? tz : undefined)
+  document.getElementById("downloadAllCsvButton").setAttribute("href", allCsvLink)
+
 }
 
 explorer.downloadTimezoneChanged = function(event) {

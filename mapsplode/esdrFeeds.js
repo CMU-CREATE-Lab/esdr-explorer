@@ -516,6 +516,20 @@ class ESDR {
   	return baseUrl + browserParams.toString()
 	}
 
+	getMultiExportLink(channelIds, fromTime, toTime, format, timezone) {
+		let baseUrl = `${this.apiUrl}/feeds/export/${channelIds}?`
+  	let browserParams = new URLSearchParams()
+  	browserParams.set("from", fromTime.toFixed(3))
+  	browserParams.set("to", toTime.toFixed(3))
+  	// timezone optional, no timezone means unix epoch timestamps
+  	if (timezone)
+  		browserParams.set("timezone", timezone)
+  	browserParams.set("format", format)
+
+  	return baseUrl + browserParams.toString()
+	}
+
+
 	/**
 		This function tries to find a color mapping for a given channel.
 		@return a color map with a color map texture image name and range for applying it
