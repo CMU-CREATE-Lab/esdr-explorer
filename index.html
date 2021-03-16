@@ -504,6 +504,11 @@ input[type="search"] {
   border-radius: 3px;
 }
 
+.flex-fixed-size {
+  flex-shrink: 0;
+  flex-grow: 0;
+}
+
 .plots-toolbar-group-left {
   margin-right: 0em;
   border: none;
@@ -697,12 +702,12 @@ input[type="search"] {
       </div>
     </div>
     <div id="plotsDownloadToolbar" class="plots-toolbar" style="height: 0px; padding: 0px; overflow-y: hidden;">
-      <div class="toolbar-group-spacer"></div>
-      <div class="plots-shadow-group">
+      <div class="toolbar-group-spacer" style="flex-grow: 1;"></div>
+      <div class="plots-shadow-group flex-fixed-size">
         <div id="timezoneButton" class="plots-toolbar-button"></div>
       </div>
       <div class="toolbar-group-spacer"></div>
-      <div class="plots-shadow-group">
+      <div class="plots-shadow-group flex-fixed-size">
         <div class="plots-toolbar-button"><img src="mapsplode/download.svg" class="button-icon"></img>&nbsp;<a id="downloadAllJsonButton" style="font-size: small;">Download JSON</a></div>
         <button class="plots-toolbar-button plots-toolbar-group-divider hide-when-narrow"><div class="plots-toolbar-group-divider-content"></div></button>
         <button class="plots-toolbar-button plots-toolbar-group-right"><a id="downloadAllCsvButton" style="font-size: small;">Download CSV</a></button>
@@ -1179,6 +1184,7 @@ function parseUrlParams() {
       // let channelName = channelId.slice(channelId.indexOf(".")+1)
       // explorer.addPlot(feedId, channelName)
     }
+    explorer.updateDataDownloadLinks()
   }
 
   // grapher time limits and cursor
@@ -1472,51 +1478,20 @@ explorer.toggleSettings = function() {
 
 }
 
-explorer.sizeVisibleDownloadButtonDivs = function() {
-  let optionsBlock = document.getElementById("plotOptions")
-  let groupBlock = document.getElementById("plotCornerExtension")
-  let widthIFrame = document.getElementById("plotWidthIframe")
-
-  if (groupBlock.style.width && groupBlock.style.width !== "0px") {
-
-   let maxWidth = Array.from(document.querySelectorAll(".plot-extension")).reduce((acc, element) => Math.max(acc, element.scrollWidth || 1.0), 0.0)
-
-    let widthString = maxWidth + 'px'
-    groupBlock.style.width = widthString
-
-    document.querySelectorAll(".plot-extension").forEach((element) => element.style.width = widthString)
-
-    // update time range as we're changing size
-    explorer.updateDataDownloadLinks()
-    explorer.grapher.updatePlotTimeRanges()
-    explorer.grapher.requestRedraw()
-
-  }
-}
-
-
 explorer.toggleDataDownloads = function() {
 
-  let optionsBlock = document.getElementById("plotOptions")
-  let groupBlock = document.getElementById("plotCornerExtension")
-  let widthIFrame = document.getElementById("plotWidthIframe")
+  let downloadToolbarBlock = document.getElementById("plotsDownloadToolbar")
 
   let transitionTime = 300
-  let transitionTargetWidth = 0
-  let transitionStartWidth = 0
 
   let transitionTargetHeight = 0
   let transitionStartHeight = 0
 
   let maxHeight = 2
 
-  let maxWidth = Array.from(document.querySelectorAll(".plot-extension")).reduce((acc, element) => Math.max(acc, element.scrollWidth || 1.0), 0.0)
 
-  if (!groupBlock.style.width || groupBlock.style.width === "0px") {
-    transitionTargetWidth = maxWidth
+  if (!downloadToolbarBlock.style.height || (downloadToolbarBlock.style.height === "0px") || (downloadToolbarBlock.style.height === "0em")) {
     transitionTargetHeight = maxHeight
-    // transitionTargetWidth = 0.5*widthIFrame.clientWidth
-    transitionStartWidth = 0
     transitionStartHeight = 0
     explorer.showDataDownloads = true
     document.getElementById("showDataDownloadsButton").classList.add("active-toolbar-button")
@@ -1524,9 +1499,7 @@ explorer.toggleDataDownloads = function() {
 
   }
   else {
-    transitionTargetWidth = 0
     transitionTargetHeight = 0
-    transitionStartWidth = maxWidth
     transitionStartHeight = maxHeight
     explorer.showDataDownloads = false
     document.getElementById("showDataDownloadsButton").classList.remove("active-toolbar-button")
@@ -1537,14 +1510,8 @@ explorer.toggleDataDownloads = function() {
   let transitionAnimation = function(time) {
     let timeRange = explorer.grapher.getTimeRange()
     let u = Math.min((time - startTime)/transitionTime, 1.0)
-    let width = transitionStartWidth*(1.0-u) + transitionTargetWidth*(u)
     let height = transitionStartHeight*(1.0-u) + transitionTargetHeight*(u)
-    let widthString = width + 'px'
-    groupBlock.style.width = widthString
 
-    document.querySelectorAll(".plot-extension").forEach((element) => element.style.width = widthString)
-
-    let downloadToolbarBlock = document.getElementById("plotsDownloadToolbar")
     downloadToolbarBlock.style.height = height + "em"
 
     explorer.updateDataDownloadLinks()
@@ -1556,8 +1523,6 @@ explorer.toggleDataDownloads = function() {
   }
 
   window.requestAnimationFrame(transitionAnimation)
-
-
 
   updateUrlHash()
 
@@ -1843,6 +1808,8 @@ explorer.interactiveSelectChannelWithId = function(channelId, isSelected) {
   let infoCheckbox = document.getElementById(`searchResults-${channelId}`)
   if (infoCheckbox)
     infoCheckbox.checked = isSelected
+
+  explorer.updateDataDownloadLinks()
 
   updateUrlHash()
 }
@@ -2360,12 +2327,6 @@ explorer.updateDataDownloadLinks = function() {
   let channelIds = []
   for (let [channelId, {plotId: plotId}] of explorer.plots) {
     channelIds.push(channelId)
-    let feedId = parseInt(channelId.slice(0, channelId.indexOf(".")))
-    let channelName = channelId.slice(channelId.indexOf(".")+1)
-    let csvLink = esdr.getExportLink(feedId, channelName, explorer.startTime, explorer.endTime, "csv", tz.length > 0 ? tz : undefined)
-    document.getElementById(`plotlink_csv-${plotId}`).setAttribute("href", csvLink)
-    let jsonLink = esdr.getExportLink(feedId, channelName, explorer.startTime, explorer.endTime, "json", tz.length > 0 ? tz : undefined)
-    document.getElementById(`plotlink_json-${plotId}`).setAttribute("href", jsonLink)
   }
 
   let allJsonLink = esdr.getMultiExportLink(channelIds, explorer.startTime, explorer.endTime, "json", tz.length > 0 ? tz : undefined)
@@ -2725,8 +2686,6 @@ explorer.addPlot = function(feedId, channelName) {
   explorer.setPlotToHeight(plotId, explorer.plotHeight*explorer.plotBaseSize())
 
 
-  // update download links in new plot (by being lazy and just updating them all)
-  explorer.sizeVisibleDownloadButtonDivs()
 
   // TODO: data point listener only gets mouse events
 
