@@ -1066,6 +1066,7 @@ _binarySearch(array, predicate) {
 		let feedIndexMap = new Map(feeds.map((e, i) => [e.id, i]))
 
 		let positions = feeds.map(feed => [feed.latlng.lng, feed.latlng.lat])
+		let sizes = feeds.map(feed => 10.0)
 
 		// look for feed states that determine coloring
 		// FIXME: selectedFeeds is fetched from data source here, but interactive selections need to be done through selectFeed() to be visible
@@ -1086,6 +1087,7 @@ _binarySearch(array, predicate) {
 			},
 			feeds: feeds,
 			positions: positions,
+			sizes: sizes,
 			fillColors: this.repeatArray(this.colors.defaultFeedFillColor, feeds.length),
 			strokeColors: this.repeatArray(this.colors.defaultFeedStrokeColor, feeds.length),
 			strokeWidths: this.repeatArray([1.0], feeds.length),
@@ -1195,6 +1197,7 @@ _binarySearch(array, predicate) {
 
 	  this.feedSizers.set(feedId, sizer)
 	}
+
 
 	setColorizerForFeed(feedId, channelName, colorizer, colorMapLookup = undefined, amplificationFactor = 1.0) {
 
