@@ -126,15 +126,16 @@ class ESDR {
 		if (!oldQuery && newQuery)
 			return true
 
-		let mapBoundsChanged = ESDR.areMapBoundsEqual(oldQuery.mapBounds, newQuery.mapBounds)
-		let mapOnlyChanged = oldQuery.mapOnly == newQuery.mapOnly
+		let mapBoundsChanged = !ESDR.areMapBoundsEqual(oldQuery.mapBounds, newQuery.mapBounds)
+		let mapOnlyChanged = oldQuery.mapOnly != newQuery.mapOnly
 		// map filter only changed if mapOnly changes, or mapOnly is now active and bounds change
 		let mapFilterChanged = (newQuery.mapOnly && mapBoundsChanged) || mapOnlyChanged
 
-		let recentOnlyChanged = oldQuery.recentOnly == newQuery.recentOnly
-		let searchTextChanged = oldQuery.text == newQuery.text
+		let recentOnlyChanged = oldQuery.recentOnly != newQuery.recentOnly
+		let searchTextChanged = oldQuery.text != newQuery.text
+		let searchExclusionChanged = oldQuery.exclusion != newQuery.exclusion
 
-		return mapFilterChanged || recentOnlyChanged || searchTextChanged
+		return mapFilterChanged || recentOnlyChanged || searchTextChanged || searchExclusionChanged
 	}
 
 	_updateSearch(appendedFeedIds) {
