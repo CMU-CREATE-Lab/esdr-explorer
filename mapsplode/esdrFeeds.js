@@ -25,7 +25,14 @@ class ESDR {
 
 	_separateKeywordsInSearchString(text) {
 		// TODO: add support for quoted substrings
-		return text.toLowerCase().split(" ")
+
+		// need a check for text length, otherwise on an empty string `text.split(" ")` returns an empty string instead of an empty array
+		if (text.length > 0) {
+			return text.toLowerCase().split(" ")
+		}
+		else {
+			return []
+		}
 	}
 
 	_performSearchOn(feedIds, search) {
@@ -41,8 +48,10 @@ class ESDR {
 	  	// rejectedFeedIds = this.feedsOutsideGeoBox(mapBounds.getSouthWest(), mapBounds.getNorthEast())
 	  }
 
-		let searchText = search.text || ""
-		let keywords = this._separateKeywordsInSearchString(searchText)
+	  // create keyword lists for both matching and exclusion
+		let keywords = this._separateKeywordsInSearchString(search.text || "")
+		let exclusionWords = this._separateKeywordsInSearchString(search.exclusion || "")
+
 		let searchResults = feedIds.reduce( (results, feedId) => {
 			let feed = this.feeds.get(feedId)
 
@@ -66,15 +75,25 @@ class ESDR {
 			let feedName = feed.name.toLowerCase()
 			let feedIdString = feedId.toString()
 
+			// filter out unwanted exclusions: only keep a match if feedName,feedId do not contain any exclusion
+			// if the feed name is rejected, don't even continue looking for channels
+			let feedWordExclude = word => (feedName.indexOf(word) > -1) || (feedIdString == word)
+
+			let isFeedExcluded = exclusionWords.some( feedWordExclude )
+
+			if (isFeedExcluded) {
+				return results
+			}
+
 			// match keywords to feed name substring or feedId exact match
-			let isBooleanAndSearch = true
 
 			let feedWordMatch = word => (feedName.indexOf(word) > -1) || (feedIdString == word)
 
-			let feedMatches = isBooleanAndSearch ? keywords.every( feedWordMatch ) : keywords.some( feedWordMatch )
+			let isFeedMatching = keywords.every( feedWordMatch )
+
 
 			// if the feed matches the search, return a result with all channels
-			if (feedMatches)
+			if (isFeedMatching)
 			{
 				results.found.push({feedId: feedId, channels: feed.channelNames})
 				return results
@@ -82,7 +101,7 @@ class ESDR {
 
 			let channelLabels = Array.from((feed.channelLabels && feed.channelLabels.values()) || [])
 
-			let nameMatch = isBooleanAndSearch ? (name => keywords.every(word => name.toLowerCase().indexOf(word) > -1)) : (name => keywords.some(word => name.toLowerCase().indexOf(word) > -1))
+			let nameMatch = (name => keywords.every(word => name.toLowerCase().indexOf(word) > -1) && !exclusionWords.some(word => name.toLowerCase().indexOf(word) > -1))
 
 			// FIXME: this is a dirty hack to fix the channel name regression
 			let channelMatches = channelLabels.filter( nameMatch ).map(label => label.slice(label.indexOf(".")+1))
