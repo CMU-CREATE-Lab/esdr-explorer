@@ -21,6 +21,7 @@ class ESDR {
 		this.dataUpdateTimers = new Map()
 		this.channelDataUpdateCallback = (feedId, channelName) => {}
 		this.tileCache = new Map()
+		this.pendingDataRequests = new Set()
 	}
 
 	_separateKeywordsInSearchString(text) {
@@ -492,6 +493,9 @@ class ESDR {
 		  request.open('GET', url, true);
 
 		  request.onload = function() {
+		  	// remove request from pending queue
+		  	esdr.pendingDataRequests.delete(request)
+
 		    if (this.status >= 200 && this.status < 400) {
 		      // Success!
 		      var responseJson = JSON.parse(this.response);
@@ -507,20 +511,47 @@ class ESDR {
 
 		      esdr._dataUpdatedForChannel(feedId, channelName)
 
-		    } else {
+		    }
+		    // else if (this.status == 0) {
+		    // 	// request was aborted
+		    // } 
+		    else {
 		      // We reached our target server, but it returned an error
 		      console.log(`encountenered ${this.status} as the response status trying to get ESDR tile ${level}.${offset}`)
 		    }
-		  };
+		  }
 
 		  request.onerror = function() {
-		      console.log(`encountenered an error trying to get ESDR tile ${level}.${offset}`)
-		  };
+		    console.log(`encountenered an error trying to get ESDR tile ${level}.${offset}`)
+		  }
 
+		  request.onabort = function() {
+		    // console.log(`aborted to get ESDR tile ${level}.${offset}`)
+	      // get and execute the cacheFun to retrieve the list of callbacks
+	      let callbacks = esdr.tileCache.get(feedId).get(channelName).get(tileId)()
+
+	      // remove cache entry as we failed to receive data, and will have to try again
+	      esdr.tileCache.get(feedId).get(channelName).delete(tileId)
+
+	      // call callback with undefined json
+	      callbacks.forEach( storedCallback => storedCallback(undefined) )
+		  }
+
+		  // add request to pending queue (so that it can be aborted) and execute
+		  esdr.pendingDataRequests.add(request)
 		  request.send();
   	}
 
 
+	}
+
+	cancelPendingDataRequests() {
+		// execute abort() on each pending request and clear pending requests ivar
+
+		for (let request of this.pendingDataRequests) {
+			request.abort()
+		}
+		this.pendingDataRequests.clear()
 	}
 
 	getExportLink(feedId, channelName, fromTime, toTime, format, timezone) {
@@ -622,6 +653,11 @@ class TiledDataEvaluator {
 		this.tileDataSource(level, offset, (tileJson) => {
 			if (!plotter._tileInCurrentRange(level, offset)) {
 				// if data is returned for tiles that aren't in current range, ignore them
+				return
+			}
+
+			if (!tileJson) {
+				// if we haven't got valid json, request got aborted or errored out, do nothing
 				return
 			}
 
