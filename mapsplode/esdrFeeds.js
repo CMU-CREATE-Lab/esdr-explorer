@@ -2,7 +2,7 @@
 class ESDR {
 
 	constructor(geographicBounds) {
-		this.numParallelRequests = 1
+		this.numParallelRequests = 4
 
 		this.geographicBounds = geographicBounds
 		this.feeds = new Map
