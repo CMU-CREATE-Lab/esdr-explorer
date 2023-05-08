@@ -1,0 +1,688 @@
+/*color definitions*/
+:root {
+    /* HSB 210 5% 100% */
+    --light-sky-blue: #F1F8FF;
+    /* HSB 210 10% 100% */
+    --medium-sky-blue: #E6F3FF;
+    /* HSB 210 15% 100% */
+    --dark-sky-blue: #D9EDFF;
+    /* HSB 210 20% 100% */
+    --light-baby-blue: #CDE7FF;
+    /* HSB 210 30% 100% */
+    --medium-baby-blue: #B1DAFF;
+    /* HSB 210 45% 95% */
+    --dark-baby-blue: #84BBF2;
+
+    --search-block-color: var(--light-sky-blue);
+    --search-button-color: var(--light-sky-blue);
+    --search-active-button-color: var(--dark-baby-blue);
+    --search-groupbox-color: var(--light-baby-blue);
+    --search-groupcontent-color: var(--light-sky-blue);
+
+    --sidebar-color: var(--dark-sky-blue);
+    --feed-block-color: var(--light-sky-blue);
+    --channel-block-color: var(--light-sky-blue);
+
+    --plot-toolbar-color: var(--light-sky-blue);
+    --plot-button-color: var(--light-baby-blue);
+    --toolbar-active-button-color: var(--dark-baby-blue);
+    --scrubber-color: var(--medium-sky-blue);
+    --scrubber-button-color: var(--dark-baby-blue);
+    --plot-extension-color: var(--light-sky-blue);
+
+    --ui-short-transition-duration: 0.3s;
+}
+
+html,
+body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    overflow-y: hidden;
+}
+
+body {
+    font-family: sans-serif;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: stretch;
+    -ms-flex-align: stretch;
+    align-items: stretch;
+    -webkit-box-orient: horizontal;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: row;
+    flex-direction: row;
+}
+
+hr {
+    border: none;
+    border-top: 1px solid rgba(0, 0, 0, 0.2);
+}
+
+canvas {
+    width: 100%;
+    height: 100%;
+    border: none;
+    outline: none;
+}
+
+input[type="search"] {
+    -webkit-appearance: textfield;
+}
+
+.sidebar {
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: stretch;
+    -ms-flex-align: stretch;
+    align-items: stretch;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    -ms-flex-negative: 0;
+    flex-shrink: 0;
+    -webkit-box-flex: 0;
+    -ms-flex-positive: 0;
+    flex-grow: 0;
+    width: 400px;
+    z-index: 2;
+    background-color: var(--sidebar-color);
+    overflow-x: hidden;
+    -webkit-box-shadow: 1px 0px 1px rgba(0, 0, 0, 0.1);
+    box-shadow: 1px 0px 1px rgba(0, 0, 0, 0.1);
+    -webkit-transition: 0.3s;
+    transition: 0.3s;
+}
+
+.sidebar .search-results {
+    padding-left: 0.5em;
+    padding-right: 0.5em;
+    overflow-y: scroll;
+    height: 100%;
+}
+
+.floaty-search {
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    margin: 0.5em;
+    z-index: 2;
+    float: right;
+    background-color: var(--search-block-color);
+    color: black;
+    padding: 5px 5px;
+    border-radius: 3px;
+    -webkit-box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.1);
+    box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.1);
+    font-family: sans-serif;
+}
+
+.inline-search {
+    margin: 0.5em;
+    -ms-flex-negative: 0;
+    flex-shrink: 0;
+    -webkit-box-flex: 0;
+    -ms-flex-positive: 0;
+    flex-grow: 0;
+    background-color: var(--search-block-color);
+    color: black;
+    padding: 5px 5px;
+    border-radius: 3px;
+    -webkit-box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.1);
+    box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.1);
+    font-family: sans-serif;
+}
+
+.searchbar {
+    margin-right: 0.2em;
+    font-size: large;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+}
+
+.searchbar-button {
+    height: 1.5em;
+    vertical-align: middle;
+    margin: 0em 0.25em;
+    padding: 0em 0.333em;
+    font-size: inherit;
+    background-color: var(--search-button-color);
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    border: none;
+    cursor: pointer;
+    border-radius: 3px;
+    -webkit-box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.15);
+    box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.15);
+    text-align: center;
+}
+
+.searchbar-button:active {
+    background-color: var(--search-active-button-color);
+}
+
+.searchbar-linked-button {
+    height: 1.5em;
+    margin: 0em 0.1em;
+    padding: 0em 0.333em;
+    vertical-align: middle;
+    font-size: inherit;
+    background: none;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    border: none;
+    cursor: pointer;
+    border-radius: 3px;
+    text-align: center;
+}
+
+.active-searchbar-button {
+    background-color: var(--search-active-button-color);
+}
+
+.in-the-middle {
+    vertical-align: middle;
+}
+
+.searchbar-divider {
+    display: inline-block;
+    height: 1.5em;
+    width: 1px;
+    background-color: rgba(0, 0, 0, 0.2);
+}
+
+.search-text {
+    height: 1.5em;
+    border-radius: 3px;
+    border: 0px solid rgba(0, 0, 0, 0.2);
+    -webkit-box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.15);
+    box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.15);
+    font-size: large;
+    -webkit-box-flex: 1;
+    -ms-flex-positive: 1;
+    flex-grow: 1;
+    padding-left: 25px;
+    width: 339px;
+}
+
+.more-info {
+    display: block;
+    vertical-align: middle;
+    margin: 0px;
+    margin-left: 6px;
+    padding: 0px;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.search-groupbox-title {
+    margin: 0.25em 0.5em;
+}
+
+.search-group-content {
+    background-color: var(--search-groupcontent-color);
+    border-radius: 3px;
+    padding: 0.25em;
+    margin: 0.25em;
+    overflow: hidden;
+    -webkit-transition: 0.3s;
+    transition: 0.3s;
+    -webkit-box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.1) inset;
+    box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.1) inset;
+}
+
+.search-groupbox {
+    background-color: var(--search-groupbox-color);
+    border-radius: 3px;
+    margin: 0.5em 0.1em;
+    overflow: hidden;
+    -webkit-box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.1);
+    box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.1);
+    -webkit-transition: 0.3s;
+    transition: 0.3s;
+}
+
+.search-input-row {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+}
+
+.search-progress-block {
+    padding-bottom: 0px;
+    height: 0px;
+    overflow: hidden;
+    -webkit-transition: 0.3s;
+    transition: 0.3s;
+    background-color: transparent;
+}
+
+.search-result-feed-block {
+    font-size: small;
+    font-weight: bold;
+    padding: 0.1em 0.25em;
+    margin: 0.5em 0em;
+    background-color: var(--feed-block-color);
+    -webkit-box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.1);
+    box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.1);
+    border-radius: 3px;
+}
+
+.search-result-channel-block {
+    background-color: var(--channel-block-color);
+    font-size: smaller;
+    font-weight: normal;
+}
+
+.graphs {
+    height: 0px;
+    overflow-y: scroll;
+    -webkit-transition: 0.3s;
+    transition: 0.3s;
+}
+
+.googlemap {
+    height: 60%;
+    -webkit-transition: 0.3s;
+    transition: 0.3s;
+    -webkit-box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.1);
+    box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.1);
+}
+
+.map-overlay-static {
+    position: absolute;
+    z-index: -1;
+    top: 0px;
+    left: 0px;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(255, 255, 0, 0.3);
+    -webkit-transition: margin-left 0.3s;
+    transition: margin-left 0.3s;
+    pointer-events: none;
+}
+
+.plots-container {
+    height: 40%;
+    -ms-flex-negative: 0;
+    flex-shrink: 0;
+    -webkit-box-flex: 0;
+    -ms-flex-positive: 0;
+    flex-grow: 0;
+    bottom: 0px;
+    -webkit-box-shadow: 0px -1px 1px rgba(0, 0, 0, 0.1);
+    box-shadow: 0px -1px 1px rgba(0, 0, 0, 0.1);
+    overflow-y: hidden;
+    overflow-x: hidden;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: stretch;
+    -ms-flex-align: stretch;
+    align-items: stretch;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    -webkit-transition: 0.3s;
+    transition: 0.3s;
+}
+
+.grapher {
+    -ms-flex-negative: 1;
+    flex-shrink: 1;
+    -webkit-box-flex: 1;
+    -ms-flex-positive: 1;
+    flex-grow: 1;
+    font-size: small;
+}
+
+.plots-toolbar {
+    -webkit-box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.1);
+    box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.1);
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-negative: 0;
+    flex-shrink: 0;
+    -webkit-box-flex: 0;
+    -ms-flex-positive: 0;
+    flex-grow: 0;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    font-size: large;
+    background-color: var(--plot-toolbar-color);
+    padding-left: 0.25em;
+    padding-right: 0.25em;
+    padding-bottom: 0.25em;
+    padding-top: 0.25em;
+}
+
+.toolbar-spacer {
+    -ms-flex-negative: 3;
+    flex-shrink: 3;
+    -webkit-box-flex: 1;
+    -ms-flex-positive: 1;
+    flex-grow: 1;
+    min-width: 0px;
+    width: 1em;
+}
+
+.small-font {
+    font-size: small;
+}
+
+.toolbar-group-spacer {
+    -ms-flex-negative: 3;
+    flex-shrink: 3;
+    -webkit-box-flex: 1;
+    -ms-flex-positive: 1;
+    flex-grow: 1;
+    min-width: 0px;
+    max-width: 2em;
+    width: 1em;
+}
+
+.plots-date-scrubber {
+    -webkit-appearance: none;
+    height: 1em;
+    width: 100%;
+    min-width: 4em;
+    border-radius: 3px;
+    margin: 0.5em 0.25em;
+    outline: none;
+    background: var(--scrubber-color);
+    -webkit-box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.1) inset;
+    box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.1) inset;
+}
+
+.plots-date-scrubber::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    height: 1.5em;
+    width: 2em;
+    border-radius: 3px;
+    cursor: pointer;
+    background: var(--scrubber-button-color);
+    -webkit-box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.1), 0px 2px 2px rgba(255, 255, 255, 0.1) inset, 0px -2px 2px rgba(0, 0, 0, 0.05) inset;
+    box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.1), 0px 2px 2px rgba(255, 255, 255, 0.1) inset, 0px -2px 2px rgba(0, 0, 0, 0.05) inset;
+}
+
+.plots-date-scrubber::-moz-range-thumb {
+    height: 1.5em;
+    width: 2em;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+    background: var(--scrubber-button-color);
+    box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.1), 0px 2px 2px rgba(255, 255, 255, 0.1) inset, 0px -2px 2px rgba(0, 0, 0, 0.05) inset;
+}
+
+.plots-zoom-scrubber {
+    -webkit-appearance: none;
+    height: 1em;
+    width: 100%;
+    min-width: 4em;
+    margin: 0.5em 0.25em;
+    border-radius: 0.5em;
+    outline: none;
+    background: var(--scrubber-color);
+    -webkit-box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.1) inset;
+    box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.1) inset;
+}
+
+.plots-zoom-scrubber::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    height: 1.5em;
+    width: 1.5em;
+    border-radius: 50%;
+    cursor: pointer;
+    background: var(--scrubber-button-color);
+    -webkit-box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.1), 0px 2px 2px rgba(255, 255, 255, 0.1) inset, 0px -2px 2px rgba(0, 0, 0, 0.05) inset;
+    box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.1), 0px 2px 2px rgba(255, 255, 255, 0.1) inset, 0px -2px 2px rgba(0, 0, 0, 0.05) inset;
+}
+
+.plots-zoom-scrubber::-moz-range-thumb {
+    height: 1.5em;
+    width: 1.5em;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    background: var(--scrubber-button-color);
+    box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.1), 0px 2px 2px rgba(255, 255, 255, 0.1) inset, 0px -2px 2px rgba(0, 0, 0, 0.05) inset;
+}
+
+.plot-options-row {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    height: 0px;
+    -webkit-transition: 0.3s;
+    transition: 0.3s;
+    overflow-y: hidden;
+    overflow-x: hidden;
+}
+
+.plot-extension {
+    width: 0px;
+    padding: 0px;
+    margin: 0px;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    border-left: 0.5px solid black;
+    -ms-flex-negative: 0;
+    flex-shrink: 0;
+    -webkit-box-flex: 0;
+    -ms-flex-positive: 0;
+    flex-grow: 0;
+    white-space: nowrap;
+    overflow-x: hidden;
+    overflow-y: hidden;
+    background-color: var(--plot-extension-color);
+}
+
+.plot-extension-box {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: horizontal;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: row;
+    flex-direction: row;
+    -webkit-box-align: stretch;
+    -ms-flex-align: stretch;
+    align-items: stretch;
+    -webkit-box-flex: 0;
+    -ms-flex-positive: 0;
+    flex-grow: 0;
+    -ms-flex-negative: 0;
+    flex-shrink: 0;
+    overflow-y: hidden;
+}
+
+.plots-toolbar-button {
+    font-size: inherit;
+    vertical-align: middle;
+    -ms-flex-negative: 0;
+    flex-shrink: 0;
+    -webkit-box-flex: 0;
+    -ms-flex-positive: 0;
+    flex-grow: 0;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: horizontal;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: row;
+    flex-direction: row;
+    background-color: transparent;
+    border-radius: 3px;
+    border: none;
+    cursor: pointer;
+    margin: 0;
+    padding: 0em 0.5em;
+    height: 1.5em;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    text-align: center;
+}
+
+.plots-toolbar-button:disabled {
+    opacity: 0.5;
+}
+
+.active-toolbar-button {
+    background-color: var(--toolbar-active-button-color);
+}
+
+.plots-shadow-group {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-negative: 1;
+    flex-shrink: 1;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    -webkit-box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.15);
+    box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.15);
+    background-color: var(--plot-button-color);
+    margin: 0.0em 0.25em;
+    padding: 0.0em 0em;
+    border-radius: 3px;
+}
+
+.flex-fixed-size {
+    -ms-flex-negative: 0;
+    flex-shrink: 0;
+    -webkit-box-flex: 0;
+    -ms-flex-positive: 0;
+    flex-grow: 0;
+}
+
+.plots-toolbar-group-left {
+    margin-right: 0em;
+    border: none;
+    border-radius: 3px 0px 0px 3px;
+}
+
+.plots-toolbar-group-right {
+    margin-left: 0em;
+    border-radius: 0px 3px 3px 0px;
+}
+
+.plots-toolbar-group-center {
+    margin-right: 0em;
+    margin-left: 0em;
+    border-radius: 0px;
+}
+
+.plots-toolbar-group-divider {
+    padding-right: 0em;
+    padding-left: 0em;
+    margin-left: 0px;
+    margin-right: 0px;
+    border-radius: 0px;
+    overflow-x: visible;
+}
+
+.plots-toolbar-group-divider-content {
+    vertical-align: middle;
+    height: 1em;
+    width: 1px;
+    padding: 0;
+    margin: 0;
+    background-color: rgba(0, 0, 0, 0.2);
+}
+
+.button-icon {
+    font-size: inherit;
+    height: 1em;
+    vertical-align: middle;
+    cursor: pointer;
+    margin-left: 0px;
+    margin-right: 0px;
+}
+
+.unused-elements-storage {
+    width: 0px;
+    height: 0px;
+    overflow: hidden;
+    margin: 0px;
+    padding: 0px;
+    z-index: -100;
+    position: absolute;
+}
+
+#main {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    -webkit-box-align: stretch;
+    -ms-flex-align: stretch;
+    align-items: stretch;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    -webkit-transition: margin-left .3s;
+    transition: margin-left .3s;
+    padding: 0px;
+    margin: 0px;
+    height: 100%;
+    overflow-y: hidden;
+    -ms-flex-negative: 1;
+    flex-shrink: 1;
+    -webkit-box-flex: 1;
+    -ms-flex-positive: 1;
+    flex-grow: 1;
+}
+
+.loupe {
+    position: absolute;
+    margin-top: 6px;
+    padding-left: 6px;
+    opacity: 0.6;
+    font-size: 15px;
+    cursor: default;
+}
+
+@media screen and (max-width: 1000px) {
+    .hide-when-narrow {
+        display: none;
+    }
+}
+
+@media screen and (max-width: 800px) {
+    .hide-when-narrow2 {
+        display: none;
+    }
+}
